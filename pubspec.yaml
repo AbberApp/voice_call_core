@@ -1,0 +1,49 @@
+name: voice_call_core
+description: Secure, reusable Flutter package for voice call functionality without UI components
+version: 1.0.0
+homepage: https://github.com/YourOrg/voice_call_core
+repository: https://github.com/YourOrg/voice_call_core
+publish_to: none
+
+
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # WebRTC & Communication
+  flutter_webrtc: ^0.9.48
+  flutter_callkit_incoming: ^2.0.0
+  
+  # Recording & Storage
+  record: ^5.0.4
+  firebase_storage: ^11.6.0
+  firebase_performance: ^0.9.3
+  path_provider: ^2.1.1
+  
+  # Audio Session Management
+  audio_session: ^0.1.16
+  
+  # HTTP & WebSocket
+  dio: ^5.3.2
+  
+  # Utilities
+  equatable: ^2.0.5
+  intl: ^0.18.1
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+
+topics:
+  - webrtc
+  - voice-call
+  - callkit
+  - recording
+  - flutter
+  - dart
+  - communication
+  - voip
