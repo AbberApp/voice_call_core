@@ -1,19 +1,19 @@
-# PRIVATE PLUGIN NOTICE
+# PUBLIC PLUGIN NOTICE
 
-## ⚠️ PROPRIETARY SOFTWARE
+## ⚠️ ABBER-SPECIFIC SOFTWARE
 
-This Flutter plugin is **PRIVATE** and **PROPRIETARY** to Abber App.
+This Flutter plugin is **PUBLIC** but designed specifically for **Abber App**.
 
-### 🚫 RESTRICTIONS:
-- **NOT for public use**
-- **NOT for distribution**
-- **NOT for pub.dev publishing**
-- **NOT open source**
+### 📝 USAGE NOTES:
+- **Publicly accessible** on GitHub
+- **Abber-specific configurations** included
+- **NOT published to pub.dev** (publish_to: none)
+- **Open source** with Abber branding
 
-### ✅ AUTHORIZED USE:
-- **Abber App development only**
-- **Internal company projects only**
-- **Authorized developers only**
+### ✅ USAGE:
+- **Anyone can view and fork**
+- **Designed for Abber App**
+- **Contains Abber-specific settings**
 
 ### 📞 CONTACT:
 For any questions about usage rights, contact Abber App development team.

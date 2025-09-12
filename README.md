@@ -1,10 +1,10 @@
 # Voice Call Core Plugin
 
-**PRIVATE PLUGIN FOR ABBER APP ONLY**
+**PUBLIC PLUGIN FOR ABBER APP**
 
 A comprehensive Flutter plugin for Abber App voice calls with WebRTC, recording, and cloud storage support.
 
-⚠️ **This plugin is proprietary and for internal use only. Not for public distribution.**
+⚠️ **This plugin is designed specifically for Abber App. While publicly accessible, it contains Abber-specific configurations.**
 
 ## Features
 
