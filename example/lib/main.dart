@@ -160,8 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _isRecording = false;
         if (result?.success == true) {
-          _lastRecordingPath = result!.localPath;
-          _status = 'Recording saved: ${result.localPath}';
+          _lastRecordingPath = 'recording_saved';
+          _status = 'Recording completed successfully';
         } else {
           _status = 'Recording failed';
         }

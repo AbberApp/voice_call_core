@@ -27,9 +27,7 @@ dependencies:
   
   # WebRTC & Communication
   flutter_webrtc: ^1.0.0
-  flutter_callkit_incoming:
-    git:
-      url: https://github.com/hamada-developer/flutter_callkit_incoming.git
+  flutter_callkit_incoming: ^2.5.3
   
   # Recording & Storage
   record: ^6.0.0
