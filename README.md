@@ -1,85 +1,61 @@
-# Voice Call Core
+# Voice Call Core Plugin
 
-[![pub package](https://img.shields.io/pub/v/voice_call_core.svg)](https://pub.dev/packages/voice_call_core)
+A comprehensive Flutter plugin for voice calls with WebRTC, recording, and cloud storage support.
 
-A secure, reusable Flutter package for voice call functionality without UI components.
+## Features
 
-## 🚀 Features
+- 🎙️ **High-Quality Voice Calls** - WebRTC-based voice communication
+- 📱 **CallKit Integration** - Native iOS CallKit and Android ConnectionService
+- 🎵 **Call Recording** - Automatic call recording with configurable quality
+- ☁️ **Cloud Storage** - Firebase Storage integration for recordings
+- 🔧 **Configurable** - Flexible configuration system for different environments
+- 🔒 **Secure** - No hardcoded sensitive data, configuration injection
+- 📊 **Performance Monitoring** - Built-in performance tracking
+- 🌐 **Multi-Platform** - Android, iOS, and Web support
 
-- 🎙️ **Call Recording**: High-quality audio recording with cloud storage
-- ☁️ **Cloud Storage**: Automatic upload to Firebase Storage
-- 🔒 **Security First**: No hardcoded sensitive data
-- 📊 **Performance Monitoring**: Built-in call quality metrics
-- 🎨 **UI Agnostic**: Bring your own interface
-- 🔧 **Configurable**: Flexible configuration system
+## Installation
 
-## 📦 Installation
-
-Add to your `pubspec.yaml`:
+Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
   voice_call_core: ^1.0.0
 ```
 
-## 🔧 Quick Start
+## Quick Start
 
-### 1. Create Configuration
-
-First, implement the `SensitiveConfig` interface with your app's configuration:
+### 1. Initialize the Plugin
 
 ```dart
 import 'package:voice_call_core/voice_call_core.dart';
 
-class MyAppConfig implements SensitiveConfig {
+// Create your configuration
+class MyVoiceConfig implements SensitiveConfig {
   @override
-  String get apiBaseUrl => 'https://api.myapp.com';
+  String get apiBaseUrl => 'https://your-api.com';
   
   @override
-  String get webrtcSocketUrl => 'wss://ws.myapp.com/webrtc';
+  String get firebaseProjectId => 'your-project-id';
   
   @override
-  String get meetingSocketUrl => 'wss://ws.myapp.com/meeting';
+  String get firebaseStorageBucket => 'your-bucket.appspot.com';
   
   @override
   List<String> get stunServers => [
-    'stun:stun.myapp.com:3478',
-    'stun:stun.l.google.com:19302', // Fallback
+    'stun:stun.l.google.com:19302',
   ];
   
-  @override
-  List<Map<String, dynamic>> get turnServers => [
-    {
-      'urls': ['turn:turn.myapp.com:3478'],
-      'username': 'your-turn-username',
-      'credential': 'your-turn-password',
-    }
-  ];
-  
-  @override
-  String get firebaseProjectId => 'your-firebase-project';
-  
-  @override
-  String get firebaseStorageBucket => 'your-firebase-project.appspot.com';
-  
-  @override
-  String? get apiKey => 'your-api-key';
-  
-  @override
-  String? get secretKey => null;
+  // ... implement other required methods
 }
-```
 
-### 2. Initialize SDK
-
-```dart
+// Initialize in your main.dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await VoiceCallCore.initialize(
     CoreSDKConfig(
       appName: 'My App',
-      sensitiveConfig: MyAppConfig(),
+      sensitiveConfig: MyVoiceConfig(),
       qualityConfig: const WebRTCQualityConfig.highQuality(),
       enableRecording: true,
       enablePerformanceMonitoring: true,
@@ -90,223 +66,212 @@ void main() async {
 }
 ```
 
-### 3. Use Recording Manager
+### 2. Create Managers
 
 ```dart
-class CallService {
-  late final CallRecordingManager _recordingManager;
-  
-  void initialize() {
-    _recordingManager = VoiceCallCore.instance.createRecordingManager(
-      config: CallRecordingConfig.highQualityConfig(),
-    );
-    
-    // Listen to recording state
-    _recordingManager.stateStream.listen((state) {
-      print('Recording state: $state');
-    });
-  }
-  
-  Future<void> startRecording(String orderId) async {
-    final success = await _recordingManager.startRecording(
-      orderId: orderId,
-    );
-    
-    if (success) {
-      print('Recording started');
-    }
-  }
-  
-  Future<void> stopRecording() async {
-    final result = await _recordingManager.stopRecording();
-    
-    if (result?.success == true) {
-      print('Recording uploaded to: ${result!.cloudPath}');
-    }
-  }
+// Create recording manager
+final recordingManager = VoiceCallCore.instance.createRecordingManager(
+  config: CallRecordingConfig.highQualityConfig(),
+);
+
+// Create cloud storage manager
+final cloudManager = VoiceCallCore.instance.createCloudStorageManager();
+```
+
+### 3. Start Recording
+
+```dart
+// Start recording a call
+await recordingManager.startRecording(orderId: 'call-123');
+
+// Stop recording and upload to cloud
+final result = await recordingManager.stopRecording();
+if (result?.success == true) {
+  print('Recording uploaded: ${result!.cloudPath}');
 }
 ```
 
-## 🔧 Configuration
+## Configuration
 
-### Environment Variables
+### SensitiveConfig Interface
 
-You can use `EnvironmentConfig` for easy setup:
+Implement the `SensitiveConfig` interface to provide your app's sensitive data:
 
 ```dart
-await VoiceCallCore.initialize(
-  CoreSDKConfig(
-    appName: 'My App',
-    sensitiveConfig: EnvironmentConfig(),
+class ProductionConfig implements SensitiveConfig {
+  @override
+  String get apiBaseUrl => 'https://api.yourapp.com';
+  
+  @override
+  String get webhookEndpoint => '$apiBaseUrl/webhooks/calls';
+  
+  @override
+  String get webrtcSocketUrl => 'wss://ws.yourapp.com/webrtc';
+  
+  @override
+  List<String> get stunServers => [
+    'stun:stun.l.google.com:19302',
+    'stun:stun1.l.google.com:19302',
+  ];
+  
+  @override
+  List<Map<String, dynamic>> get turnServers => [
+    {
+      'urls': ['turn:your-turn-server.com:3478'],
+      'username': 'your-username',
+      'credential': 'your-credential',
+    },
+  ];
+  
+  @override
+  String get firebaseProjectId => 'your-firebase-project';
+  
+  @override
+  String get firebaseStorageBucket => 'your-bucket.appspot.com';
+  
+  @override
+  String? get apiKey => 'your-api-key';
+  
+  @override
+  String? get secretKey => null;
+}
+```
+
+### WebRTC Quality Presets
+
+Choose from predefined quality configurations:
+
+```dart
+// High quality (48kHz, 128kbps)
+const WebRTCQualityConfig.highQuality()
+
+// Standard quality (32kHz, 64kbps)
+const WebRTCQualityConfig.standardQuality()
+
+// Low quality (16kHz, 32kbps)
+const WebRTCQualityConfig.lowQuality()
+
+// Custom quality
+WebRTCQualityConfig.custom(
+  sampleRate: 44100,
+  maxBitrate: 96000,
+  minBitrate: 24000,
+)
+```
+
+## Platform Setup
+
+### Android
+
+Add permissions to `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name=\"android.permission.INTERNET\" />
+<uses-permission android:name=\"android.permission.RECORD_AUDIO\" />
+<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\" />
+<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />
+```
+
+### iOS
+
+Add permissions to `ios/Runner/Info.plist`:
+
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>This app needs microphone access for voice calls</string>
+```
+
+### Web
+
+No additional setup required for web platform.
+
+## Advanced Usage
+
+### Custom Recording Configuration
+
+```dart
+final recordingManager = VoiceCallCore.instance.createRecordingManager(
+  config: CallRecordingConfig(
+    quality: RecordingQuality.high,
+    format: RecordingFormat.aac,
+    enableAutoUpload: true,
+    deleteLocalAfterUpload: true,
+    maxDurationMinutes: 30,
   ),
 );
 ```
 
-Required environment variables:
-- `API_BASE_URL`: Your API base URL
-- `WEBRTC_SOCKET_URL`: WebRTC socket endpoint
-- `MEETING_SOCKET_URL`: Meeting socket endpoint
-- `FIREBASE_PROJECT_ID`: Firebase project ID
-- `TURN_SERVER_URLS`: TURN server URLs (comma-separated)
-- `TURN_USERNAME`: TURN server username
-- `TURN_CREDENTIAL`: TURN server password
-
-### Quality Settings
+### Cloud Storage Operations
 
 ```dart
-CoreSDKConfig(
-  // ...
-  qualityConfig: WebRTCQualityConfig.highQuality(), // or .balanced(), .lowBandwidth()
-)
-```
+final cloudManager = VoiceCallCore.instance.createCloudStorageManager();
 
-### Recording Settings
-
-```dart
-final recordingManager = VoiceCallCore.instance.createRecordingManager(
-  config: CallRecordingConfig.highQualityConfig(), // or .defaultConfig(), .compactConfig()
+// Upload existing file
+final uploadResult = await cloudManager.uploadCallRecording(
+  localFilePath: '/path/to/recording.aac',
+  orderId: 'call-123',
+  customFileName: 'important-call.aac',
 );
+
+// Get recordings for an order
+final recordings = await cloudManager.getOrderRecordings('call-123');
+
+// Delete recording
+await cloudManager.deleteCloudRecording(recordings.first.cloudPath);
 ```
 
-## 🔒 Security
-
-This package follows security best practices:
-
-- ✅ No hardcoded URLs or credentials
-- ✅ Configuration injection required
-- ✅ Environment variable support
-- ✅ Secure by default
-
-**Important**: You MUST implement `SensitiveConfig` in your application. The package will throw errors if sensitive data is not provided.
-
-## 📊 API Reference
-
-### VoiceCallCore
-
-Main SDK class:
+### Performance Monitoring
 
 ```dart
-class VoiceCallCore {
-  static Future<void> initialize(CoreSDKConfig config);
-  static bool get isInitialized;
-  static VoiceCallCore get instance;
-  
-  CallRecordingManager createRecordingManager({CallRecordingConfig? config});
-  CloudStorageManager createCloudStorageManager();
-  CoreSDKConfig get config;
-  
-  static Future<void> dispose();
+// Monitor call quality
+recordingManager.statsStream.listen((stats) {
+  print('Audio level: ${stats.audioLevel}');
+  print('Connection quality: ${stats.connectionQuality}');
+});
+```
+
+## Error Handling
+
+```dart
+try {
+  await VoiceCallCore.initialize(config);
+} on ConfigException catch (e) {
+  print('Configuration error: $e');
+} catch (e) {
+  print('Initialization failed: $e');
 }
 ```
 
-### CallRecordingManager
+## Security Best Practices
 
-Recording functionality:
+1. **Never hardcode sensitive data** - Use environment variables or secure storage
+2. **Implement SensitiveConfig properly** - Validate all configuration values
+3. **Use HTTPS/WSS** - Ensure all network communication is encrypted
+4. **Validate API responses** - Don't trust external data
+5. **Handle permissions properly** - Request permissions before using features
 
-```dart
-class CallRecordingManager {
-  Future<bool> startRecording({String? orderId, String? customFileName});
-  Future<CloudUploadResult?> stopRecording();
-  Future<void> cancelRecording();
-  
-  Stream<CallRecordingState> get stateStream;
-  bool get isRecording;
-  Duration get recordingDuration;
-  
-  void dispose();
-}
-```
+## Example App
 
-### CloudStorageManager
+See the `example/` directory for a complete implementation showing:
 
-Cloud storage operations:
+- Plugin initialization
+- Call recording workflow
+- Cloud storage integration
+- Error handling
+- Platform-specific setup
 
-```dart
-class CloudStorageManager {
-  Future<CloudUploadResult> uploadCallRecording({
-    required String localFilePath,
-    String? orderId,
-    String? customFileName,
-  });
-  
-  Future<List<CloudRecordingInfo>> getOrderRecordings(String orderId);
-  Future<StorageStats> getStorageStats();
-  Future<bool> deleteCloudRecording(String cloudPath);
-}
-```
-
-## 📱 Models
-
-### CallEntity
-
-```dart
-class CallEntity {
-  final String uuIdCall;
-  final String orderId;
-  final String roomId;
-  final UserCall caller;
-  final UserCall receiver;
-}
-```
-
-### CallState
-
-```dart
-abstract class CallState {
-  CallStateIdle();
-  CallStateConnecting();
-  CallStateConnected();
-  CallStateEnded({String? reason});
-  CallStateError(String message);
-}
-```
-
-### ConnectionStats
-
-```dart
-class ConnectionStats {
-  final double jitter;
-  final double fractionLost;
-  final double roundTripTime;
-  final int packetsLost;
-  final int totalPackets;
-  
-  double get qualityScore; // 0.0 to 1.0
-  String get qualityText; // 'Excellent', 'Good', 'Fair', 'Poor'
-  bool get isPoorConnection;
-}
-```
-
-## 🧪 Example
-
-See the [example](example/) directory for a complete implementation.
-
-To run the example:
-
-```bash
-cd example
-flutter pub get
-flutter run
-```
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## Support
 
-- 📖 [Documentation](https://github.com/YourOrg/voice_call_core/wiki)
-- 🐛 [Issues](https://github.com/YourOrg/voice_call_core/issues)
-- 💬 [Discussions](https://github.com/YourOrg/voice_call_core/discussions)
-
-## 🔄 Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a list of changes.
+For support, please open an issue on [GitHub](https://github.com/AbberApp/voice_call_core/issues).

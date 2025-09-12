@@ -1,5 +1,8 @@
 library voice_call_core;
 
+// Platform Interface
+export 'voice_call_core_platform_interface.dart';
+
 // Core Managers
 export 'src/core/managers/call_recording_manager.dart';
 export 'src/core/managers/cloud_storage_manager.dart';
