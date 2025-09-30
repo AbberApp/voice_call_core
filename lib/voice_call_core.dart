@@ -16,6 +16,7 @@ export 'src/utils/logger.dart';
 export 'src/core/config/core_sdk_config.dart';
 export 'src/core/config/webrtc_quality_config.dart';
 export 'src/core/abstractions/sensitive_config.dart';
+export 'package:flutter_webrtc/flutter_webrtc.dart';
 
 
 class VoiceCallCore {
