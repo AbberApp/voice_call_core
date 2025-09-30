@@ -1,0 +1,17 @@
+{
+  "isSellerEnded": false,
+  "aps": {
+    "alert": "Call from Taha Ghazi"
+  },
+  "nameCaller": "Taha Ghazi",
+  "extra": {
+    "order_id": "3222",
+    "room_id": "taha3",
+    "image": "https://d336rd5betdm19.cloudfront.net/media/accounts/ProfileImages/2024/06/20/Taha%20Ghazi/image_processing20221219-14100-1h7atqo.webp",
+    "isSellerEnded": false
+  },
+  "isVideo": true,
+  "handle": "0123456789",
+  "id": "d23a72aa-67ff-4c4b-aeb8-8569e9196b25",
+  "type": "meeting"
+}

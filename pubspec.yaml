@@ -17,49 +17,14 @@ flutter:
         pluginClass: VoiceCallCorePlugin
       ios:
         pluginClass: VoiceCallCorePlugin
-      web:
-        pluginClass: VoiceCallCorePlugin
-        fileName: voice_call_core_web.dart
 
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
-  
-  # WebRTC & Communication
-  flutter_webrtc: ^1.0.0
-  flutter_callkit_incoming:
-    git:
-      url: https://github.com/hamada-developer/flutter_callkit_incoming.git
-  
-  # Recording & Storage
-  record: ^6.0.0
-  firebase_storage: ^13.0.0
-  firebase_performance: ^0.11.0
-  path_provider: ^2.1.5
-  
-  # Audio Session Management
-  audio_session: ^0.1.25
-  
-  # HTTP & WebSocket
-  dio: ^5.8.0
-  
-  # Utilities
+  flutter_webrtc: ^1.2.0
   equatable: ^2.0.7
-  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-
-topics:
-  - webrtc
-  - voice-call
-  - callkit
-  - recording
-  - flutter
-  - dart
-  - communication
-  - voip
-  - plugin
