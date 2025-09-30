@@ -1,4 +1,5 @@
 abstract class SensitiveConfig {
+  String get apiBaseUrl;
   List<String> get stunServers;
   String get webhookEndpoint;
 
