@@ -1,5 +1,6 @@
 abstract class SensitiveConfig {
   List<String> get stunServers;
+  String get webhookEndpoint;
 
   List<Map<String, dynamic>> get turnServers;
 }
